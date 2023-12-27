@@ -10,13 +10,19 @@ Thumbs.db
 .vscode/
 .idea/
 
+
+
 # Ignore environment-specific files
+
+config/config.env
+
 .env
 .env.*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
 
 # Ignore npm debug logs
 npm-debug.log*
@@ -47,3 +53,4 @@ out/
 
 # Ignore IDE-specific files
 .eslintcache
+config/config.env
