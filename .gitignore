@@ -54,3 +54,4 @@ out/
 # Ignore IDE-specific files
 .eslintcache
 config/config.env
+config/config.env
