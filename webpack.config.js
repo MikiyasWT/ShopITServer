@@ -34,6 +34,8 @@ module.exports = {
       net: require.resolve("net-browserify"),
       os: require.resolve("os-browserify/browser"),
       os: false,
+      async_hooks: require.resolve("async_hooks"),
+      async_hooks: true,
     },
   },
   externals: {
