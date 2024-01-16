@@ -36,7 +36,7 @@ build/
 tmp/
 
 # Ignore package lock files
-package-lock.json
+
 yarn.lock
 .pnp/
 
