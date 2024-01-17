@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
 
-const connectDatabase = async () => {
+const connectDatabase = () => {
   try {
-    await mongoose
+    mongoose
       .connect(process.env.DB_URI, {
         useNewUrlParser: true,
       })
       .then((con) => {
         console.log(
-          `MongoDB Database connected with HOST: ${con.connection.host}`
+          "\x1b[32m%s\x1b[0m",
+          `MongoDB Database connected: ${con.connection.host}:${con.connection.port}`
         );
       });
   } catch (error) {

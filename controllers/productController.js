@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const Product = require("../models/product");
 const ErrorHandler = require("../utils/errorHandler");
+const catchAsyncErrors = require("../middlewares/catchAsyncError");
+
 // Get all products   =>   /api/v1/products?keyword=apple
-exports.getProducts = async (req, res, next) => {
+exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   try {
     const products = await Product.find();
     if (products.status == 400 || products === null) {
@@ -17,9 +20,9 @@ exports.getProducts = async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler("Internal Server Error", 500));
   }
-};
+});
 
-exports.getSingleProduct = async (req, res, next) => {
+exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   const _id = req.params.id;
   const isValidId = mongoose.Types.ObjectId.isValid(_id);
   if (!isValidId) {
@@ -39,18 +42,18 @@ exports.getSingleProduct = async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler("Server Error", 500));
   }
-};
+});
 
-exports.newProduct = async (req, res, next) => {
+exports.newProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.create(req.body);
 
-  res.status(201).json({
+  return res.status(201).json({
     success: true,
     product,
   });
-};
+});
 
-exports.updateProductById = async (req, res, next) => {
+exports.updateProductById = catchAsyncErrors(async (req, res, next) => {
   try {
     let product = await Product.findById(req.params.id);
     if (product == null) {
@@ -76,9 +79,9 @@ exports.updateProductById = async (req, res, next) => {
       error: error.message,
     });
   }
-};
+});
 
-exports.deleteProductId = async (req, res, next) => {
+exports.deleteProductId = catchAsyncErrors(async (req, res, next) => {
   try {
     let product = await Product.findById(req.params.id);
 
@@ -108,4 +111,4 @@ exports.deleteProductId = async (req, res, next) => {
       error: error.message,
     });
   }
-};
+});
