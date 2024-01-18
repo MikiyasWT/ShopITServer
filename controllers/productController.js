@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const mongoose = require("mongoose");
 const Product = require("../models/product");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncError");
@@ -34,6 +33,7 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
     if (product === null) {
       return next(new ErrorHandler("No product was found", 404));
     } else {
+      ``;
       res.status(200).json({
         success: true,
         product,
