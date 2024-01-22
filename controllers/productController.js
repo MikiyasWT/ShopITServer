@@ -33,7 +33,6 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
     if (product === null) {
       return next(new ErrorHandler("No product was found", 404));
     } else {
-      ``;
       res.status(200).json({
         success: true,
         product,
