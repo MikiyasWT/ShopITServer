@@ -2,9 +2,42 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncError");
+const ApiFeatures = require("../utils/apiFeatures");
+const product = require("../models/product");
 
-// Get all products   =>   /api/v1/products?keyword=apple
-exports.getProducts = catchAsyncErrors(async (req, res, next) => {
+// Create new product   =>   /api/admin/product/new
+exports.newProduct = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.create(req.body);
+
+  return res.status(201).json({
+    success: true,
+    product,
+  });
+});
+
+// Get all products   =>   /api/products?keyword=apple
+exports.getProduct = catchAsyncErrors(async (req, res, next) => {
+  const resPerPage = 4;
+  const productsCount = await Product.countDocuments();
+
+  const apiFeatures = new ApiFeatures(Product.find(), req.query)
+    .filter()
+    .search();
+
+  let products = await apiFeatures.query;
+
+  let filteredProductsCount = products.length;
+
+  res.status(200).json({
+    success: true,
+    productsCount,
+    resPerPage,
+    filteredProductsCount,
+    products,
+  });
+});
+// Get all products (Admin)  =>   /api/admin/products
+exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   try {
     const products = await Product.find();
     if (products.status == 400 || products === null) {
@@ -21,6 +54,8 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+//get a single product by ID api/product/:id
+
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   const _id = req.params.id;
   const isValidId = mongoose.Types.ObjectId.isValid(_id);
@@ -33,7 +68,6 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
     if (product === null) {
       return next(new ErrorHandler("No product was found", 404));
     } else {
-      ``;
       res.status(200).json({
         success: true,
         product,
@@ -44,15 +78,7 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-exports.newProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.create(req.body);
-
-  return res.status(201).json({
-    success: true,
-    product,
-  });
-});
-
+// Update Product   =>   /api/admin/product/:id
 exports.updateProductById = catchAsyncErrors(async (req, res, next) => {
   try {
     let product = await Product.findById(req.params.id);
@@ -81,6 +107,7 @@ exports.updateProductById = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+// Delete Product   =>   /api/admin/product/:id
 exports.deleteProductId = catchAsyncErrors(async (req, res, next) => {
   try {
     let product = await Product.findById(req.params.id);
